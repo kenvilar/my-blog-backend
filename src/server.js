@@ -5,16 +5,13 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.get('/hello', function(req, res) {
+app.get('/hello', (req, res) => {
   console.log('ken hello');
   res.send('Hello');
-
 });
 
-app.post('/hello', function(req, res) {
+app.post('/hello', (req, res) => {
   res.send(`Hello ${req.body.name}!`);
 });
 
-app.listen(8000, function() {
-  console.log('Listening on port 8000');
-});
+app.listen(8000, () => console.log('Listening on port 8000'));
