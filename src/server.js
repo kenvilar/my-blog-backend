@@ -24,35 +24,36 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.get('/api/articles/:name', (req, res) => {
+app.get('/api/articles/:name', async (req, res) => {
   const articleName = req.params.name;
 
   try {
-    const client = MongoClient.connect('mongodb://localhost:27017',
+    const client = await MongoClient.connect('mongodb://localhost:27017',
       {useNewUrlParser: true});
     const db = client.db('my-blog');
 
-    const articleInfo = db.collection('articles').
+    const articleInfo = await db.collection('articles').
       findOne({name: articleName});
     res.status(200).json(articleInfo);
 
-    client.close();
+    await client.close();
   } catch (e) {
     // res.status(500).json({message: 'Error connecting to the database', e});
     res.status(500).json(articlesInfo[articleName]);
   }
 });
 
-app.post('/api/articles/:name/upvote', (req, res) => {
+app.post('/api/articles/:name/upvote', async (req, res) => {
   const articleName = req.params.name;
 
   try {
-    const client = MongoClient.connect('mongodb://localhost:27017',
+    const client = await MongoClient.connect('mongodb://localhost:27017',
       {useNewUrlParser: true});
     const db = client.db('my-blog');
 
-    const articleInfo = db.collection('articles').findOne({name: articleName});
-    db.collection('articles').updateOne({name: articleName}, {
+    const articleInfo = await db.collection('articles').
+      findOne({name: articleName});
+    await db.collection('articles').updateOne({name: articleName}, {
       '$set': {
         upvotes: articleInfo.upvotes + 1,
       },
@@ -61,7 +62,7 @@ app.post('/api/articles/:name/upvote', (req, res) => {
       findOne({name: articleName});
 
     res.status(200).json(updatedArticleInfo);
-    client.close();
+    await client.close();
   } catch (e) {
     // res.status(500).json({message: 'Error connecting to the database', e});
     articlesInfo[articleName].upvotes += 1;
