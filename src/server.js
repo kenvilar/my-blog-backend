@@ -45,10 +45,30 @@ app.get('/api/articles/:name', (req, res) => {
 
 app.post('/api/articles/:name/upvote', (req, res) => {
   const articleName = req.params.name;
-  articlesInfo[articleName].upvotes += 1;
-  res.status(200).
-    send(
-      `${articleName} now has ${articlesInfo[articleName].upvotes} upvotes.`);
+
+  try {
+    const client = MongoClient.connect('mongodb://localhost:27017',
+      {useNewUrlParser: true});
+    const db = client.db('my-blog');
+
+    const articleInfo = db.collection('articles').findOne({name: articleName});
+    db.collection('articles').updateOne({name: articleName}, {
+      '$set': {
+        upvotes: articleInfo.upvotes + 1,
+      },
+    });
+    const updatedArticleInfo = db.collection('articles').
+      findOne({name: articleName});
+
+    res.status(200).json(updatedArticleInfo);
+    client.close();
+  } catch (e) {
+    // res.status(500).json({message: 'Error connecting to the database', e});
+    articlesInfo[articleName].upvotes += 1;
+    res.status(500).
+      send(
+        `${articleName} now has ${articlesInfo[articleName].upvotes} upvotes.`);
+  }
 });
 
 app.post('/api/articles/:name/add-comment', (req, res) => {
