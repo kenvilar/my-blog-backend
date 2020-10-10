@@ -1,0 +1,20 @@
+{
+  "name": "my-blog-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenvilar/my-blog-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kenvilar/my-blog-backend/issues"
+  },
+  "homepage": "https://github.com/kenvilar/my-blog-backend#readme"
+}
