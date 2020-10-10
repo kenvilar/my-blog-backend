@@ -4,14 +4,17 @@ import {MongoClient} from 'mongodb';
 
 const articlesInfo = {
   'learn-react': {
+    name: 'learn-react',
     upvotes: 0,
     comments: [],
   },
   'learn-node': {
+    name: 'learn-node',
     upvotes: 0,
     comments: [],
   },
-  'my-thougths-on-resumes': {
+  'my-thoughts-on-resumes': {
+    name: 'my-thoughts-on-resumes',
     upvotes: 0,
     comments: [],
   },
@@ -24,15 +27,20 @@ app.use(bodyParser.json());
 app.get('/api/articles/:name', (req, res) => {
   const articleName = req.params.name;
 
-  const client = await MongoClient.connect('mongodb://localhost:27017',
-    {useNewUrlParser: true});
-  const db = client.db('my-blog');
+  try {
+    const client = MongoClient.connect('mongodb://localhost:27017',
+      {useNewUrlParser: true});
+    const db = client.db('my-blog');
 
-  const articleInfo = await db.collection('articles').
-    findOne({name: articleName});
-  res.status(200).json(articleInfo);
+    const articleInfo = db.collection('articles').
+      findOne({name: articleName});
+    res.status(200).json(articleInfo);
 
-  client.close();
+    client.close();
+  } catch (e) {
+    // res.status(500).json({message: 'Error connecting to the database', e});
+    res.status(500).json(articlesInfo[articleName]);
+  }
 });
 
 app.post('/api/articles/:name/upvote', (req, res) => {
