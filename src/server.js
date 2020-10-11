@@ -30,12 +30,12 @@ const withDB = async (operations, res, error = null) => {
       {useNewUrlParser: true});
     const db = client.db('my-blog');
 
-    operations(db);
+    await operations(db);
 
     await client.close();
   } catch (e) {
     // res.status(500).json({message: 'Error connecting to the database', e});
-    error();
+    await error();
   }
 };
 
@@ -44,9 +44,9 @@ app.get('/api/articles/:name', async (req, res) => {
   await withDB(async (db) => {
     const articleInfo = await db.collection('articles').
       findOne({name: articleName});
-    res.status(200).json(articleInfo);
-  }, res, () => {
-    res.status(500).json(articlesInfo[articleName]);
+    await res.status(200).json(articleInfo);
+  }, res, async () => {
+    await res.status(500).json(articlesInfo[articleName]);
   });
 });
 
@@ -62,10 +62,10 @@ app.post('/api/articles/:name/upvote', async (req, res) => {
     });
     const updatedArticleInfo = await db.collection('articles').
       findOne({name: articleName});
-    res.status(200).json(updatedArticleInfo);
-  }, res, () => {
+    await res.status(200).json(updatedArticleInfo);
+  }, res, async () => {
     articlesInfo[articleName].upvotes += 1;
-    res.status(500).
+    await res.status(500).
       send(
         `${articleName} now has ${articlesInfo[articleName].upvotes} upvotes.`);
   });
@@ -85,10 +85,10 @@ app.post('/api/articles/:name/add-comment', async (req, res) => {
     });
     const updatedArticleInfo = await db.collection('articles').
       findOne({name: articleName});
-    res.status(200).json(updatedArticleInfo);
-  }, res, () => {
-    articlesInfo[articleName].comments.push({username, text});
-    res.status(200).send(articlesInfo[articleName]);
+    await res.status(200).json(updatedArticleInfo);
+  }, res, async () => {
+    await articlesInfo[articleName].comments.push({username, text});
+    await res.status(200).send(articlesInfo[articleName]);
   });
 });
 
