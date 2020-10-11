@@ -46,7 +46,7 @@ app.get('/api/articles/:name', async (req, res) => {
       findOne({name: articleName});
     await res.status(200).json(articleInfo);
   }, res, async () => {
-    await res.status(500).json(articlesInfo[articleName]);
+    await res.status(200).json(articlesInfo[articleName]);
   });
 });
 
@@ -65,9 +65,7 @@ app.post('/api/articles/:name/upvote', async (req, res) => {
     await res.status(200).json(updatedArticleInfo);
   }, res, async () => {
     articlesInfo[articleName].upvotes += 1;
-    await res.status(500).
-      send(
-        `${articleName} now has ${articlesInfo[articleName].upvotes} upvotes.`);
+    await res.status(200).send(articlesInfo[articleName]);
   });
 });
 
