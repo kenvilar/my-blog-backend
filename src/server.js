@@ -8,13 +8,13 @@ const articlesInfo = {
     upvotes: 0,
     comments: [],
   },
-  'learn-node': {
+  'learn-angular': {
     name: 'learn-node',
     upvotes: 0,
     comments: [],
   },
-  'my-thoughts-on-resumes': {
-    name: 'my-thoughts-on-resumes',
+  'learn-vue': {
+    name: 'learn-vue',
     upvotes: 0,
     comments: [],
   },
